@@ -38,6 +38,21 @@ where
 
     pub fn add(&mut self, value: T) {
         //TODO
+        self.items.push(value);
+        self.count += 1;
+        let mut idx = self.count;
+        while idx > 1 {
+            let parent_idx = self.parent_idx(idx);
+            let should_swap = (self.comparator)(&self.items[idx],&self.items[parent_idx]);
+            if should_swap {
+                self.items.swap(idx,parent_idx);
+                idx = parent_idx;
+            }
+            else {
+                break;
+            }
+
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -58,7 +73,20 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        let left = self.left_child_idx(idx);
+        let right = self.right_child_idx(idx);
+        if right <= self.count {
+            if (self.comparator)(&self.items[left], &self.items[right]) {
+                // 左孩子较优
+                left
+            } else {
+                // 右孩子较优
+                right
+            }
+        }
+        else {
+            left
+        }
     }
 }
 
@@ -85,7 +113,26 @@ where
 
     fn next(&mut self) -> Option<T> {
         //TODO
-		None
+		if self.count == 0 {
+            return None;
+        }
+        self.items.swap(1,self.count);
+        let res = self.items.pop();
+        self.count -= 1;
+        let mut idx = 1;
+        while self.left_child_idx(idx) <= self.count {
+            let child_idx = self.smallest_child_idx(idx);
+            if (self.comparator)(&self.items[child_idx], &self.items[idx]) {
+                // 交换当前节点与选中孩子
+                self.items.swap(idx, child_idx);
+                // 更新当前节点索引为孩子索引
+                idx = child_idx;
+            } else {
+                // 调整完成，退出循环
+                break;
+            }
+        }
+        res
     }
 }
 

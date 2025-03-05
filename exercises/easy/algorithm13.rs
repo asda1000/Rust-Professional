@@ -12,10 +12,27 @@
 */
 
 use std::fmt::{self, Display, Formatter};
+use std::collections::HashMap;
 
 pub fn are_anagrams(s1: String, s2: String) -> bool {
     // TODO: Implement the logic to check if two strings are anagrams
-    false // Placeholder return value
+     // Placeholder return value
+    let mut counts: HashMap<char, i32> = HashMap::new();
+    for ch in s1.chars() {
+        if ch.is_alphabetic() {
+            for lower in ch.to_lowercase() {
+                *counts.entry(lower).or_insert(0) += 1;
+            }
+        }
+    }
+    for ch in s2.chars() {
+        if ch.is_alphabetic() {
+            for lower in ch.to_lowercase() {
+                *counts.entry(lower).or_insert(0) -= 1;
+            }
+        }
+    }
+    counts.values().all(|&val| val==0)
 }
 
 #[cfg(test)]

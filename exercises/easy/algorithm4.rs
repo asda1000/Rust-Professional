@@ -51,12 +51,44 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        match self.root {
+            None => {
+                self.root = Some(Box::new(TreeNode::new(value)));
+            }
+            Some(ref mut node) => {
+                node.insert(value);
+            }
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        fn search_node<T: Ord>(node: &TreeNode<T>, value: &T) -> bool{
+            match node.value.cmp(value) {
+                Ordering::Equal => {
+                    return true;
+                }
+                Ordering::Greater => {
+                    node.left.as_ref().is_some_and(|n| {
+                            search_node(n, value)
+                        }
+                    )
+
+                }
+                Ordering::Less => {
+                    node.right.as_ref().is_some_and( |n| {
+                            search_node(n,value)
+                        }
+                    )
+                }
+            }
+        }
+        
+        match &self.root {  //
+            Some(node) => search_node(node, &value),
+            None => false,
+        }
     }
 }
 
@@ -67,6 +99,27 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        match self.value.cmp(&value) {
+            Ordering::Greater => {
+                if let Some(ref mut left) = self.left {
+                    left.insert(value);
+                }
+                else {
+                    self.left = Some(Box::new(TreeNode::new(value)));
+                }
+            }
+            Ordering::Less => {
+                if let Some(ref mut right) = self.right {
+                   right.insert(value);
+                }
+                else {
+                    self.right = Some(Box::new(TreeNode::new(value)));
+                }
+            }
+            Ordering::Equal => {
+
+            }
+        }
     }
 }
 
