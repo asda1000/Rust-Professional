@@ -192,7 +192,7 @@ fn days_to_next_a_share_opening(year: i32, month: i32, day: i32) -> i32 {
         7 => 0, // 周日
         5 => 2, // 周五，距离下周一开盘 2 天
         6 => 1, // 周六，距离周一开盘 2 天
-        _ => 0, // 周一到周四
+        _ => 0, 
     }
 }
 fn calculate_time(date_str: &str) -> String {
